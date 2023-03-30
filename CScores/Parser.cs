@@ -16,7 +16,7 @@ namespace CScores
     {
         public override void GetMatches()
         {
-            
+
         }
         public override void GetMatchStats()
         {

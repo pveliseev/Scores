@@ -15,7 +15,8 @@ namespace CScores
         private Team home;
         private Team away;
         private string score;
-        private string status;
+        private string status; //fin, 
+        
 
         public Match() { }
 

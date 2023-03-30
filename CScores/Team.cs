@@ -10,7 +10,15 @@ namespace CScores
     {
         private string name;
         private string status; //win, lose
-        private List<Player> players;
-
+        //private string url;
+        //private List<Player> players;
+        private List<StatBar> statBars;
+        public readonly bool isHome;
+        public Team(string name, string status, bool isHome)
+        {
+            this.name = name;
+            this.status = status;
+            this.isHome = isHome;
+        }
     }
 }

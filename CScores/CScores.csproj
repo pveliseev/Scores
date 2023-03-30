@@ -92,6 +92,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="League.cs" />
     <Compile Include="Match.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Player.cs" />
