@@ -8,13 +8,20 @@ namespace CScores
 {
     internal class Team
     {
-        private string name;        
-        //private string url;
+        private string name;
+        private List<Game> games = null;
 
-        private List<Game> games;        
+        public string Name { get => name; set => name = value; }
+
         public Team(string name)
         {
-            this.name = name;
+            Name = name;
+            games = new List<Game>();
+        }
+
+        public override string ToString()
+        {
+            return string.Format($"{Name}");
         }
     }
 }

@@ -8,11 +8,12 @@ namespace CScores
 {
     internal class Game
     {
-        private List<StatBar> statBars;
+        private List<StatBar> stats;
         public readonly bool isHome;
         private Team opponent;
         private string status; //win, lose
         private Match match;
+        private string score;
         //private List<Player> players;
     }
 }
