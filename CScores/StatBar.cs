@@ -9,7 +9,6 @@ namespace CScores
     internal class StatBar
     {
         private string title;
-        private string homeValue;
-        private string awayValue;
+        private string value;
     }
 }

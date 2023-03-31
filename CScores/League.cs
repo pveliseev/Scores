@@ -20,6 +20,7 @@ namespace CScores
         private string url;
         private string kindOfSport;
         private List<Match> matches;
+        private List<Team> teams;
         public League() { }
         public League(string title, string url)
         {

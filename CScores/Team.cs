@@ -8,17 +8,13 @@ namespace CScores
 {
     internal class Team
     {
-        private string name;
-        private string status; //win, lose
+        private string name;        
         //private string url;
-        //private List<Player> players;
-        private List<StatBar> statBars;
-        public readonly bool isHome;
-        public Team(string name, string status, bool isHome)
+
+        private List<Game> games;        
+        public Team(string name)
         {
             this.name = name;
-            this.status = status;
-            this.isHome = isHome;
         }
     }
 }
