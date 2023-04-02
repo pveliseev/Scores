@@ -12,11 +12,12 @@ namespace CScores
         private List<Game> games = null;
 
         public string Name { get => name; set => name = value; }
+        internal List<Game> Games { get => games; set => games = value; }
 
         public Team(string name)
         {
             Name = name;
-            games = new List<Game>();
+            Games = new List<Game>();
         }
 
         public override string ToString()

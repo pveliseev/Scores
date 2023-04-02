@@ -57,12 +57,7 @@ namespace CScores
                 {
                     parser.GetMatches(driver, league);
                     league.TeamsInit();
-
-                    int count = league.Matches.Count;
-                    for (int i = 0; i < 1; i++)
-                    {
-                        //parser.GetMatchStats(driver, league);
-                    }
+                    parser.GetGameStats(driver, league);
                 }
             }
             finally

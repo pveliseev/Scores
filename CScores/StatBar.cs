@@ -8,7 +8,12 @@ namespace CScores
 {
     internal class StatBar
     {
-        private string title;
-        private string value;
+        public readonly string Title;
+        public readonly double Value;
+        public StatBar(string title, double value)
+        {
+            Title = title;
+            Value = value;
+        }
     }
 }
