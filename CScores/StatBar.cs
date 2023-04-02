@@ -15,5 +15,10 @@ namespace CScores
             Title = title;
             Value = value;
         }
+
+        public override string ToString()
+        {
+            return string.Format($"{Title}: {Value}");
+        }
     }
 }

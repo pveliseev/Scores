@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System;
@@ -8,10 +9,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CScores
 {
+
+
     internal abstract class Parser
     {
         public abstract void GetMatches(IWebDriver driver, League league);
@@ -37,6 +41,16 @@ namespace CScores
             driver.Navigate().GoToUrl(league.Url);
 
             //TODO поиск кнопки ПОКАЗАТЬ БОЛЬШЕ МАТЧЕЙ и щелкаем по ней покане прогрузится весь список
+            while (true)
+            {
+                try
+                {
+                    Thread.Sleep(5000);
+                    new Actions(driver).KeyDown(Keys.End).Perform();                    
+                    driver.FindElement(By.XPath("//a[contains(@class, 'event__more event__more--static')]")).Click();
+                }
+                catch { break; }
+            }
 
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(driver.PageSource);
@@ -55,15 +69,22 @@ namespace CScores
         }
         public override void GetGameStats(IWebDriver driver, League league)
         {
+            //const string WIN = "win";
+            //const string LOSE = "lose";
+            //const string DRAW = "draw";
+            Console.WriteLine($"Лига: {league.KindOfSport} - {league.Title}");
+
             int count = league.Matches.Count;
-            for (int i = 20; i < 21; i++)
+            for (int i = 0; i < 5; i++)
             {
                 Match match = league.Matches[i];
+                Console.WriteLine($"Парсинг матча: {match.HomeTeamName} - {match.AwayTeamName}...");
                 driver.Navigate().GoToUrl(match.Url);
                 try
                 {
                     //ожидаем подгрузки таблицы со статой
                     new WebDriverWait(driver, TimeSpan.FromSeconds(20)).Until(ExpectedConditions.ElementExists(By.ClassName("stat__row")));
+                    Thread.Sleep(3000); //на всякий случай замедлить на случай не получения бана
 
                     //парсинг статы
                     HtmlDocument doc = new HtmlDocument();
@@ -86,10 +107,10 @@ namespace CScores
                     foreach (var stat in statsNodes)
                     {
                         string title = stat.SelectSingleNode(".//div[contains(@class, 'stat__categoryName')]").InnerText;
-                        string homeValue = stat.SelectSingleNode(".//div[contains(@class, 'stat__homeValue')]").InnerText;
-                        string awayValue = stat.SelectSingleNode(".//div[contains(@class, 'stat__awayValue')]").InnerText;
+                        string homeValue = stat.SelectSingleNode(".//div[contains(@class, 'stat__homeValue')]").InnerText.Trim(new char[] { '%' });
+                        string awayValue = stat.SelectSingleNode(".//div[contains(@class, 'stat__awayValue')]").InnerText.Trim(new char[] { '%' });
 
-                        homeStats.Add(new StatBar(title, Convert.ToDouble(homeValue.Replace('.',','))));
+                        homeStats.Add(new StatBar(title, Convert.ToDouble(homeValue.Replace('.', ','))));
                         awayStats.Add(new StatBar(title, Convert.ToDouble(awayValue.Replace('.', ','))));
                     }
 

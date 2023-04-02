@@ -37,7 +37,7 @@ namespace CScores
 
         public override string ToString()
         {
-            return string.Format($"[{ID}] {HomeTeamName} - {AwayTeamName}");
+            return string.Format($"[{ID} {Date} {Time}] {HomeTeamName} - {AwayTeamName} ({Status}) {Score}");
         }
     }
 }
