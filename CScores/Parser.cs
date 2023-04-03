@@ -18,8 +18,15 @@ namespace CScores
 
     internal abstract class Parser
     {
+        protected const string WIN = "win";
+        protected string LOSE = "lose";
+        protected const string DRAW = "draw";
+
+        //заполнение реализовывается при парсинге статистики игр!!!
+        public Dictionary<Sport, HashSet<string>> template = new Dictionary<Sport, HashSet<string>>();
         public abstract void GetMatches(IWebDriver driver, League league);
         public abstract void GetGameStats(IWebDriver driver, League league);
+
     }
 
     internal class XScoresParser : Parser
@@ -41,16 +48,16 @@ namespace CScores
             driver.Navigate().GoToUrl(league.Url);
 
             //TODO поиск кнопки ПОКАЗАТЬ БОЛЬШЕ МАТЧЕЙ и щелкаем по ней покане прогрузится весь список
-            while (true)
-            {
-                try
-                {
-                    Thread.Sleep(5000);
-                    new Actions(driver).KeyDown(Keys.End).Perform();                    
-                    driver.FindElement(By.XPath("//a[contains(@class, 'event__more event__more--static')]")).Click();
-                }
-                catch { break; }
-            }
+            //while (true)
+            //{
+            //    try
+            //    {
+            //        Thread.Sleep(5000);
+            //        new Actions(driver).KeyDown(Keys.End).Perform();                    
+            //        driver.FindElement(By.XPath("//a[contains(@class, 'event__more event__more--static')]")).Click();
+            //    }
+            //    catch { break; }
+            //}
 
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(driver.PageSource);
@@ -69,9 +76,8 @@ namespace CScores
         }
         public override void GetGameStats(IWebDriver driver, League league)
         {
-            //const string WIN = "win";
-            //const string LOSE = "lose";
-            //const string DRAW = "draw";
+            template.Add(league.KindOfSport, new HashSet<string>());            
+
             Console.WriteLine($"Лига: {league.KindOfSport} - {league.Title}");
 
             int count = league.Matches.Count;
@@ -112,6 +118,8 @@ namespace CScores
 
                         homeStats.Add(new StatBar(title, Convert.ToDouble(homeValue.Replace('.', ','))));
                         awayStats.Add(new StatBar(title, Convert.ToDouble(awayValue.Replace('.', ','))));
+
+                        template[league.KindOfSport].Add(title);
                     }
 
                     homeTeam.Games.Add(new Game(true)
@@ -119,7 +127,7 @@ namespace CScores
                         MatchID = match.ID,
                         Opponent = match.AwayTeamName,
                         Score = homeScore.ToString(),
-                        Status = homeScore > awayScore ? "Win" : (homeScore < awayScore ? "Lose" : "Draw"),
+                        Status = homeScore > awayScore ? WIN : (homeScore < awayScore ? LOSE : DRAW),
                         Stats = homeStats
                     });
 
@@ -128,7 +136,7 @@ namespace CScores
                         MatchID = match.ID,
                         Opponent = match.HomeTeamName,
                         Score = awayScore.ToString(),
-                        Status = awayScore > homeScore ? "Win" : (awayScore < homeScore ? "Lose" : "Draw"),
+                        Status = awayScore > homeScore ? WIN : (awayScore < homeScore ? LOSE : DRAW),
                         Stats = awayStats
                     });
                 }
