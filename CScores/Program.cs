@@ -25,7 +25,7 @@ namespace CScores
             //настройка и запуск драйвера хрома
             ChromeOptions options = new ChromeOptions();
             options.PageLoadStrategy = PageLoadStrategy.Normal;
-            //options.AddArguments("headless", "disable-gpu");
+            options.AddArguments("headless", "disable-gpu");
             options.AddArgument("--disable-blink-features=AutomationControlled"); //скрывает что работает автодрайвер
             //options.AddArgument("--start-maximized");
             //options.AddArgument("--disable-logging");
@@ -51,6 +51,8 @@ namespace CScores
             };
             //задаем парсер
             Parser parser = new FlashScoreParser();
+            //шаблон для вывода
+            StatBarTitles template;
 
             try
             {
@@ -58,13 +60,14 @@ namespace CScores
                 {
                     parser.GetMatches(driver, league);
                     league.TeamsInit();
-                    parser.GetGameStats(driver, league);
+                    parser.GetGameStats(driver, league, out template);                    
                 }
+                
             }
             finally
             {
 
-
+                
                 //конец программы
                 sw.Stop();
                 Console.WriteLine($"Время выпонения скрипта: {sw.Elapsed}");

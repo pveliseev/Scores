@@ -23,9 +23,9 @@ namespace CScores
         protected const string DRAW = "draw";
 
         //заполнение реализовывается при парсинге статистики игр!!!
-        public Dictionary<Sport, HashSet<string>> template = new Dictionary<Sport, HashSet<string>>();
+        //public Dictionary<Sport, HashSet<string>> template = new Dictionary<Sport, HashSet<string>>();
         public abstract void GetMatches(IWebDriver driver, League league);
-        public abstract void GetGameStats(IWebDriver driver, League league);
+        public abstract void GetGameStats(IWebDriver driver, League league, out StatBarTitles template);
 
     }
 
@@ -35,9 +35,9 @@ namespace CScores
         {
 
         }
-        public override void GetGameStats(IWebDriver driver, League league)
+        public override void GetGameStats(IWebDriver driver, League league, out StatBarTitles template)
         {
-
+            template = StatBarTitles.Instance();
         }
     }
 
@@ -45,6 +45,7 @@ namespace CScores
     {
         public override void GetMatches(IWebDriver driver, League league)
         {
+            //TODO реализовать запись даты и времени на этапе сбора списка матчей
             driver.Navigate().GoToUrl(league.Url);
 
             //TODO поиск кнопки ПОКАЗАТЬ БОЛЬШЕ МАТЧЕЙ и щелкаем по ней покане прогрузится весь список
@@ -74,14 +75,16 @@ namespace CScores
                 league.Matches.Add(new Match(matchID, home, away, url));
             }
         }
-        public override void GetGameStats(IWebDriver driver, League league)
+        public override void GetGameStats(IWebDriver driver, League league, out StatBarTitles template)
         {
-            template.Add(league.KindOfSport, new HashSet<string>());            
+            //сбор имен статистики для вывода в таблицу
+            template = StatBarTitles.Instance();
+            template.Add(league.KindOfSport, new HashSet<string>());
 
             Console.WriteLine($"Лига: {league.KindOfSport} - {league.Title}");
 
             int count = league.Matches.Count;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
             {
                 Match match = league.Matches[i];
                 Console.WriteLine($"Парсинг матча: {match.HomeTeamName} - {match.AwayTeamName}...");
@@ -112,9 +115,9 @@ namespace CScores
                     HtmlNodeCollection statsNodes = doc.DocumentNode.SelectNodes("//div[@class='stat__row']");
                     foreach (var stat in statsNodes)
                     {
-                        string title = stat.SelectSingleNode(".//div[contains(@class, 'stat__categoryName')]").InnerText;
-                        string homeValue = stat.SelectSingleNode(".//div[contains(@class, 'stat__homeValue')]").InnerText.Trim(new char[] { '%' });
-                        string awayValue = stat.SelectSingleNode(".//div[contains(@class, 'stat__awayValue')]").InnerText.Trim(new char[] { '%' });
+                        string title = stat.SelectSingleNode(".//div[@class = 'stat__categoryName']/text()").InnerText.Trim();
+                        string homeValue = stat.SelectSingleNode(".//div[@class = 'stat__homeValue']").InnerText.Trim(new char[] { '%' });
+                        string awayValue = stat.SelectSingleNode(".//div[@class = 'stat__awayValue']").InnerText.Trim(new char[] { '%' });
 
                         homeStats.Add(new StatBar(title, Convert.ToDouble(homeValue.Replace('.', ','))));
                         awayStats.Add(new StatBar(title, Convert.ToDouble(awayValue.Replace('.', ','))));

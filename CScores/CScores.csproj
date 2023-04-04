@@ -97,9 +97,11 @@
     <Compile Include="Game.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="Print.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatBar.cs" />
+    <Compile Include="StatBarTitles.cs" />
     <Compile Include="Team.cs" />
   </ItemGroup>
   <ItemGroup>
