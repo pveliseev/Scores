@@ -8,9 +8,12 @@ namespace CScores
 {
     internal class Team
     {
-        private string name;
-        private string status; //win, lose
-        private List<Player> players;
+        public string Name { get; set; }
+        public List<Player> Players { get; set; }
 
+        public Team(string name)
+        {
+            Name = name;
+        }
     }
 }

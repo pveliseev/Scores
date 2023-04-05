@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 namespace CScores
 {
-    internal struct StatBar
+    internal struct Page
     {
         public string Title { get; set; }
-        public double Value { get; set; }
+        public string Url { get; set; }
 
+        public Page(string title, string url)
+        {
+            Title = title;
+            Url = url;
+        }
         public override string ToString()
         {
-            return string.Format($"{Title} {Value}");
+            return string.Format($"{Title} {Url}");
         }
     }
 }
