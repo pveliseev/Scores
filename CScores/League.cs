@@ -18,6 +18,7 @@ namespace CScores
         public Sport Sport { get; set; }
         public List<Page> Pages { get; set; }
         public List<Match> Matches { get; set; }
+        public HashSet<string> TeamNames { get; set; }
         public List<Game> Games { get; set; }
         public HashSet<string> StatBarTitles { get; set; }
 

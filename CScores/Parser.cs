@@ -17,7 +17,7 @@ namespace CScores
     internal abstract class Parser
     {
         public abstract void GetMatches(IWebDriver driver, League league);
-        public abstract void GetGameStats(IWebDriver driver, League league);
+        public abstract void GetGames(IWebDriver driver, League league);
     }
 
     internal class XScoresParser : Parser
@@ -26,7 +26,7 @@ namespace CScores
         {
 
         }
-        public override void GetGameStats(IWebDriver driver, League league)
+        public override void GetGames(IWebDriver driver, League league)
         {
 
         }
@@ -70,12 +70,19 @@ namespace CScores
 
                 league.Matches.AddRange(tmp);
             }
-
-
         }
-        public override void GetGameStats(IWebDriver driver, League league)
+        public override void GetGames(IWebDriver driver, League league)
         {
+            //инициализация коллекций которые будут здесь заполнены
+            league.TeamNames = new HashSet<string>();
+            league.Games = new List<Game>(); //определять выбор типа игры
+            league.StatBarTitles = new HashSet<string>();
 
+            int cnt = league.Matches.Count;
+            for (int i = 0; i < 3; i++)
+            {
+
+            }
         }
     }
 }

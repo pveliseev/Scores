@@ -14,6 +14,7 @@ namespace CScores
         public string Status { get; set; } //final
         public string Form { get; set; } //win, lose, draw
         public bool IsHome { get; set; }
+        public string LeagueTitle { get; set; }
         public Dictionary<string, List<StatBar>> Stats { get; set; } //subTabs => Stats
         public Game() { }
 
