@@ -16,6 +16,7 @@ namespace CScores
         public bool IsHome { get; set; }
         public string LeagueTitle { get; set; }
         public int Score { get; set; }
+        public string URL { get; set; }
         public Dictionary<string, List<StatBar>> TeamStats { get; set; } //subTabs => Stats
         public Game() { }
 

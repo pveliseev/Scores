@@ -25,7 +25,7 @@ namespace CScores
             //настройка и запуск драйвера хрома
             ChromeOptions options = new ChromeOptions();
             options.PageLoadStrategy = PageLoadStrategy.Normal;
-            options.AddArguments("headless", "disable-gpu");
+            //options.AddArguments("headless", "disable-gpu");
             options.AddArgument("--disable-blink-features=AutomationControlled"); //скрывает что работает автодрайвер
             //options.AddArgument("--start-maximized");
             //options.AddArgument("--disable-logging");

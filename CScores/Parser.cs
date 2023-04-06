@@ -136,6 +136,8 @@ namespace CScores
                         league.StatBarTitles.Add(title);
                     }
 
+                    //GetPlayerStats(driver, match);
+
                     //Заполняем данные по домашней команде
                     games.Add(new TeamGame
                     {
@@ -144,6 +146,7 @@ namespace CScores
                         Date = date,
                         Time = time,
                         Status = status,
+                        URL = match.Url,
                         Owner = new Team(homeName),
                         Rival = new Team(awayName),
                         IsHome = true,
@@ -159,6 +162,7 @@ namespace CScores
                         Date = date,
                         Time = time,
                         Status = status,
+                        URL = match.Url,
                         Owner = new Team(awayName),
                         Rival = new Team(homeName),
                         IsHome = false,
@@ -174,6 +178,72 @@ namespace CScores
             }
 
             league.Games = games;
+        }
+
+        //метод пишетсяв тестовом режиме... доработать
+        //подумать куда собирать стату что бы не грамоздить
+        internal (string Home, string Away) GetPlayerStats(IWebDriver driver, Match match)
+        {
+            List<string> urls = new List<string>()
+            {
+                $"https://www.flashscore.com.ua/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/1",
+                $"https://www.flashscore.com.ua/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/2"
+            };
+
+            foreach(string url in urls)
+            {
+                var tmp = new Dictionary<string, string>();
+                var head = new List<string>();
+                var body = new List<string>();
+
+                driver.Navigate().GoToUrl(url);
+                //ожидаем подгрузки таблицы со статой
+                new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(ExpectedConditions.ElementExists(By.XPath("//div[contains(@class, 'section psc__section')]")));
+
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(driver.PageSource);
+                var playerStatsNodes = doc.DocumentNode.SelectNodes("//div[contains(@class,'ui-table playerStatsTable')]");
+
+                /* иерархия таблицы
+                 * ui-table playerStatsTable
+                 * 
+                 *      ui-table__header
+                 *              ui-table__headerCell
+                 *              ui-table__headerCell
+                 *              ui-table__headerCell
+                 *              .......
+                 *      
+                 *      ui-table__body
+                 *              ui-table__row playerStatsTable__row
+                 *                      playerStatsTable__cell
+                 *                      playerStatsTable__cell
+                 *                      ...
+                 *              ui-table__row playerStatsTable__row
+                 *                      playerStatsTable__cell
+                 *                      playerStatsTable__cell
+                 *                      ...
+                 *              ui-table__row playerStatsTable__row
+                 *              .....
+                 */
+
+                foreach (var table in playerStatsNodes)
+                {
+                    var header = table.SelectNodes(".//div[contains(@class,'ui-table__headerCell')]");
+                    foreach(var hCell in header)
+                    {
+                        head.Add(hCell.InnerText);
+                    }
+
+                    var bodys = table.SelectNodes(".//*[contains(@class,'playerStatsTable__cell')]");
+
+                    foreach( var bCell in bodys)
+                    {
+                        body.Add(bCell.InnerText);
+                    }
+                }
+            }
+
+            return ("123", "321");
         }
     }
 }
