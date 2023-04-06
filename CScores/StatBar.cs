@@ -11,6 +11,11 @@ namespace CScores
         public string Title { get; set; }
         public double Value { get; set; }
 
+        public StatBar(string title, double value)
+        {
+            Title = title;
+            Value = value;
+        }
         public override string ToString()
         {
             return string.Format($"{Title} {Value}");

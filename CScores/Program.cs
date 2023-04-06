@@ -52,7 +52,7 @@ namespace CScores
             {
                 Parser parser = new FlashScoreParser();
                 parser.GetMatches(driver, mlb);
-                //parser.GetGameStats(driver, league);
+                parser.GetTeamGames(driver, mlb);
             }
             finally
             {
