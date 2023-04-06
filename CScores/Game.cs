@@ -16,7 +16,7 @@ namespace CScores
         public bool IsHome { get; set; }
         public string LeagueTitle { get; set; }
         public int Score { get; set; }
-        public Dictionary<string, List<StatBar>> Stats { get; set; } //subTabs => Stats
+        public Dictionary<string, List<StatBar>> TeamStats { get; set; } //subTabs => Stats
         public Game() { }
 
     }
@@ -25,6 +25,11 @@ namespace CScores
     {
         public Team Owner { get; set; }
         public Team Rival { get; set; }
+
+        public override string ToString()
+        {            
+            return string.Format($"{Owner.Name} {Form}");
+        }
     }
 
     internal class IndividualGame : Game

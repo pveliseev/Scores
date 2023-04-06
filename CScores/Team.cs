@@ -15,5 +15,10 @@ namespace CScores
         {
             Name = name;
         }
+
+        public override string ToString()
+        {
+            return string.Format($"{Name} Players {Players?.Count}");
+        }
     }
 }

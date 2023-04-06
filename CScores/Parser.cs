@@ -16,9 +16,9 @@ namespace CScores
 {
     internal abstract class Parser
     {
-        protected const string WIN = "win";
-        protected string LOSE = "lose";
-        protected const string DRAW = "draw";
+        protected const string WIN = "WIN";
+        protected string LOSE = "LOSE";
+        protected const string DRAW = "DRAW";
 
         public abstract void GetMatches(IWebDriver driver, League league);
         public abstract void GetTeamGames(IWebDriver driver, League league);
@@ -92,7 +92,7 @@ namespace CScores
                 {
                     //ожидаем подгрузки таблицы со статой
                     new WebDriverWait(driver, TimeSpan.FromSeconds(20)).Until(ExpectedConditions.ElementExists(By.ClassName("stat__row")));
-                    Thread.Sleep(3000); //на всякий случай замедлить на случай не получения бана
+                    Thread.Sleep(3000); //замедлить на случай не получения бана
 
                     //парсинг статы
                     HtmlDocument doc = new HtmlDocument();
@@ -103,8 +103,8 @@ namespace CScores
                     string time = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'duelParticipant__startTime')]").InnerText.Trim().Split(' ')[1].Trim();
                     string score = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'detailScore__wrapper')]").InnerText;
                     string status = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'detailScore__status')]").InnerText.ToLower();
-                    string homeName = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'duelParticipant__home')]//a[contains(@class, 'participant__participantName']").InnerText;
-                    string awayName = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'duelParticipant__away')]//a[contains(@class, 'participant__participantName']").InnerText;
+                    string homeName = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'duelParticipant__home')]//a[contains(@class, 'participant__participantName')]").InnerText;
+                    string awayName = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'duelParticipant__away')]//a[contains(@class, 'participant__participantName')]").InnerText;
                     var statsNodes = doc.DocumentNode.SelectNodes("//div[@class='stat__row']");
 
                     //собираем список команд в лиге
@@ -114,8 +114,15 @@ namespace CScores
                     int homeScore = Convert.ToInt32(score.Split('-')[0].Trim());
                     int awayScore = Convert.ToInt32(score.Split('-')[1].Trim());
 
-                    var homeStats = new Dictionary<string, List<StatBar>>(); homeStats.Add("матч", new List<StatBar>());
-                    var awayStats = new Dictionary<string, List<StatBar>>(); awayStats.Add("матч", new List<StatBar>());
+                    var homeStats = new Dictionary<string, List<StatBar>>
+                    {
+                        { "матч", new List<StatBar>() }
+                    };
+                    var awayStats = new Dictionary<string, List<StatBar>>
+                    {
+                        { "матч", new List<StatBar>() }
+                    };
+                    
                     foreach (var stat in statsNodes)
                     {
                         string title = stat.SelectSingleNode(".//div[@class = 'stat__categoryName']/text()").InnerText.Trim();
@@ -142,7 +149,7 @@ namespace CScores
                         IsHome = true,
                         Score = homeScore,
                         Form = homeScore > awayScore ? WIN : (homeScore < awayScore ? LOSE : DRAW),
-                        Stats = homeStats
+                        TeamStats = homeStats
                     });
                     //заполняем данные по гостевой команде
                     games.Add(new TeamGame
@@ -157,7 +164,7 @@ namespace CScores
                         IsHome = false,
                         Score = awayScore,
                         Form = awayScore > homeScore ? WIN : (awayScore < homeScore ? LOSE : DRAW),
-                        Stats = awayStats
+                        TeamStats = awayStats
                     });
                 }
                 catch (Exception ex)
