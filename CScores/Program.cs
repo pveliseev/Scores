@@ -42,19 +42,19 @@ namespace CScores
 
             try
             {
-                Parser parser = new FlashScoreParser();
+                Parser parser = new FlashScoreBaseballParser();
                 parser.GetMatches(driver, mlb);
                 parser.GetTeamGames(driver, mlb);
             }
             finally
             {
-
+                Print.Baseball(mlb);
                 //конец программы
                 sw.Stop();
                 Console.WriteLine($"Время выпонения скрипта: {sw.Elapsed}");
                 Console.WriteLine("Нажмите любую клавишу для завершения...");
-                //Console.ReadKey();
                 driver.Quit();
+                Console.ReadKey();
             }
         }
     }

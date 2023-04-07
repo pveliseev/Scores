@@ -36,7 +36,7 @@ namespace CScores
         }
     }
 
-    internal class FlashScoreParser : Parser
+    internal class FlashScoreBaseballParser : Parser
     {
         public override void GetMatches(IWebDriver driver, League league)
         {
@@ -85,11 +85,12 @@ namespace CScores
             int cnt = league.Matches.Count;
             for (int i = 0; i < 3; i++)
             {
+                Console.WriteLine($"Парсинг матча {i + 1} из {cnt}...");
                 Match match = league.Matches[i];
-                driver.Navigate().GoToUrl(match.Url);
 
                 try
                 {
+                    driver.Navigate().GoToUrl(match.Url);
                     //ожидаем подгрузки таблицы со статой
                     new WebDriverWait(driver, TimeSpan.FromSeconds(20)).Until(ExpectedConditions.ElementExists(By.ClassName("stat__row")));
                     Thread.Sleep(3000); //замедлить на случай не получения бана
@@ -137,7 +138,7 @@ namespace CScores
                     }
 
                     //парс статистики игроков
-                    var (HomePlayers, AwayPlayers) = GetPlayerStats(driver, match);
+                    var (HomePlayers, AwayPlayers) = GetPlayerStats(driver, match, league);
 
                     //Заполняем данные по домашней команде
                     games.Add(new TeamGame
@@ -182,9 +183,9 @@ namespace CScores
 
             league.Games = games;
         }
-
-        internal (List<Player> HomePlayers, List<Player> AwayPlayers) GetPlayerStats(IWebDriver driver, Match match)
+        internal (List<Player> HomePlayers, List<Player> AwayPlayers) GetPlayerStats(IWebDriver driver, Match match, League league)
         {
+            league.PlayerStatBarTitles = new HashSet<string>();
             string[] urls =
             {
                 $"https://www.flashscore.com.ua/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/1",
@@ -228,6 +229,7 @@ namespace CScores
 
                             for (int cell = 2; cell < bRow.Count; cell++)
                             {
+                                league.PlayerStatBarTitles.Add(tbHead[cell]);
                                 playerStats.Add(new StatBar(tbHead[cell], ToDouble(bRow[cell].InnerText)));
                             }
                             p.PlayerStats = playerStats;
@@ -243,7 +245,6 @@ namespace CScores
                 return (null, null);
             }
         }
-
         internal double ToDouble(string value)
         {
             if (value == "-") return default;
