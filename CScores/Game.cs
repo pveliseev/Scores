@@ -17,7 +17,6 @@ namespace CScores
         public string LeagueTitle { get; set; }
         public int Score { get; set; }
         public string URL { get; set; }
-        public Dictionary<string, List<StatBar>> TeamStats { get; set; } //subTabs => Stats
         public Game() { }
 
     }
@@ -26,6 +25,8 @@ namespace CScores
     {
         public Team Owner { get; set; }
         public Team Rival { get; set; }
+        public List<Player> Players { get; set; }
+        public Dictionary<string, List<StatBar>> TeamStats { get; set; } //subTabs => Stats
 
         public override string ToString()
         {            
