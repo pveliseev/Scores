@@ -40,14 +40,6 @@ namespace CScores
             mlb.Pages.Add(new Page("MLB 2023", @"https://www.flashscore.com.ua/baseball/usa/mlb/results/"));
             //mlb.Pages.Add(new Page("MLB 2022", @"https://www.flashscore.com.ua/baseball/usa/mlb-2022/results/"));
 
-            //League seriaA = new League(Sport.Football);
-            //seriaA.Pages.Add(new Page("SeriaA 2022-2023", @"https://www.flashscore.com.ua/football/italy/serie-a/results/"));
-            //seriaA.Pages.Add(new Page("SeriaA 2021-2022", @"https://www.flashscore.com.ua/football/italy/serie-a-2021-2022/results/"));
-
-            //List<League> list = new List<League>();
-            //list.Add(mlb);
-            //list.Add(seriaA);
-
             try
             {
                 Parser parser = new FlashScoreParser();
@@ -56,7 +48,6 @@ namespace CScores
             }
             finally
             {
-
 
                 //конец программы
                 sw.Stop();

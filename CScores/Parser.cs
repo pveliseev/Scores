@@ -79,7 +79,7 @@ namespace CScores
         {
             //инициализация коллекций которые будут здесь заполнены
             league.TeamNames = new HashSet<string>();
-            league.StatBarTitles = new HashSet<string>();
+            league.GameStatBarTitles = new HashSet<string>();
             var games = new List<TeamGame>();
 
             int cnt = league.Matches.Count;
@@ -133,11 +133,11 @@ namespace CScores
                         awayStats["матч"].Add(new StatBar(title, Convert.ToDouble(awayValue.Replace('.', ','))));
 
                         //собираем список статы в лиге
-                        league.StatBarTitles.Add(title);
+                        league.GameStatBarTitles.Add(title);
                     }
 
                     //парс статистики игроков
-                    GetPlayerStats(driver, match);
+                    var (HomePlayers, AwayPlayers) = GetPlayerStats(driver, match);
 
                     //Заполняем данные по домашней команде
                     games.Add(new TeamGame
@@ -154,7 +154,7 @@ namespace CScores
                         Score = homeScore,
                         Form = homeScore > awayScore ? WIN : (homeScore < awayScore ? LOSE : DRAW),
                         TeamStats = homeStats,
-                        Players = null
+                        Players = HomePlayers
                     });
                     //заполняем данные по гостевой команде
                     games.Add(new TeamGame
@@ -171,7 +171,7 @@ namespace CScores
                         Score = awayScore,
                         Form = awayScore > homeScore ? WIN : (awayScore < homeScore ? LOSE : DRAW),
                         TeamStats = awayStats,
-                        Players = null
+                        Players = AwayPlayers
                     });
                 }
                 catch (Exception ex)
@@ -185,7 +185,6 @@ namespace CScores
 
         internal (List<Player> HomePlayers, List<Player> AwayPlayers) GetPlayerStats(IWebDriver driver, Match match)
         {
-
             string[] urls =
             {
                 $"https://www.flashscore.com.ua/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/1",
@@ -196,46 +195,53 @@ namespace CScores
                 new List<Player>(),
                 new List<Player>(),
             };
-
-            for (int i = 0; i < 2; i++)
+            try
             {
-                driver.Navigate().GoToUrl(urls[i]);
-                new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(ExpectedConditions.ElementExists(By.XPath("//div[contains(@class, 'section psc__section')]")));
-
-                HtmlDocument doc = new HtmlDocument();
-                doc.LoadHtml(driver.PageSource);
-                var tableNodes = doc.DocumentNode.SelectNodes("//div[contains(@class,'ui-table playerStatsTable')]");
-
-                foreach (var table in tableNodes)
+                for (int i = 0; i < 2; i++)
                 {
-                    //собирем значения заголовка таблицы из ячеек
-                    var tbHead = new List<string>();
-                    var header = table.SelectNodes(".//div[contains(@class,'ui-table__headerCell')]");
-                    foreach (var cell in header)
-                    {
-                        tbHead.Add(cell.InnerText);
-                    }
+                    driver.Navigate().GoToUrl(urls[i]);
+                    new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(ExpectedConditions.ElementExists(By.XPath("//div[contains(@class, 'section psc__section')]")));
 
-                    //собираем из тела строки таблицы
-                    var bodyNodes = table.SelectNodes(".//div[contains(@class,'ui-table__row playerStatsTable__row')]");
-                    foreach (var body in bodyNodes)
-                    {
-                        var playerStats = new List<StatBar>();
-                        //собираем из строк значения из ячеек
-                        var bRow = body.SelectNodes(".//*[contains(@class,'playerStatsTable__cell')]");
-                        //заполняем имя и роль игрока из первого столбца
-                        Player p = new Player(bRow[0].InnerText, tbHead[0]);
+                    HtmlDocument doc = new HtmlDocument();
+                    doc.LoadHtml(driver.PageSource);
+                    var tableNodes = doc.DocumentNode.SelectNodes("//div[contains(@class,'ui-table playerStatsTable')]");
 
-                        for (int cell = 2; cell < bRow.Count; cell++)
+                    foreach (var table in tableNodes)
+                    {
+                        //собирем значения заголовка таблицы из ячеек
+                        var tbHead = new List<string>();
+                        var header = table.SelectNodes(".//div[contains(@class,'ui-table__headerCell')]");
+                        foreach (var cell in header)
                         {
-                            playerStats.Add(new StatBar(tbHead[cell], ToDouble(bRow[cell].InnerText)));
+                            tbHead.Add(cell.InnerText);
                         }
-                        p.PlayerStats = playerStats;
-                        players[i].Add(p);
+
+                        //собираем из тела строки таблицы
+                        var bodyNodes = table.SelectNodes(".//div[contains(@class,'ui-table__row playerStatsTable__row')]");
+                        foreach (var body in bodyNodes)
+                        {
+                            var playerStats = new List<StatBar>();
+                            //собираем из строк значения из ячеек
+                            var bRow = body.SelectNodes(".//*[contains(@class,'playerStatsTable__cell')]");
+                            //заполняем имя и роль игрока из первого столбца
+                            Player p = new Player(bRow[0].InnerText, tbHead[0]);
+
+                            for (int cell = 2; cell < bRow.Count; cell++)
+                            {
+                                playerStats.Add(new StatBar(tbHead[cell], ToDouble(bRow[cell].InnerText)));
+                            }
+                            p.PlayerStats = playerStats;
+                            players[i].Add(p);
+                        }
                     }
                 }
+                return (players[0], players[1]);
             }
-            return (players[0], players[1]);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR PlayerStats: {ex.Message}");
+                return (null, null);
+            }
         }
 
         internal double ToDouble(string value)

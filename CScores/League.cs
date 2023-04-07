@@ -20,7 +20,8 @@ namespace CScores
         public List<Match> Matches { get; set; }
         public HashSet<string> TeamNames { get; set; }
         public IEnumerable<Game> Games { get; set; }
-        public HashSet<string> StatBarTitles { get; set; }
+        public HashSet<string> GameStatBarTitles { get; set; }
+        public HashSet<string> PlayerStatBarTitles { get; set; }
 
         public League(Sport sport)
         {
