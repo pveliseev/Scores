@@ -16,5 +16,10 @@ namespace CScores
             Name = name;
             Role = role;
         }
+
+        public override string ToString()
+        {
+            return string.Format($"{Name} {Role}  Stats: {PlayerStats?.Count}");
+        }
     }
 }

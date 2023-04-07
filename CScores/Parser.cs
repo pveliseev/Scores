@@ -136,7 +136,8 @@ namespace CScores
                         league.StatBarTitles.Add(title);
                     }
 
-                    //GetPlayerStats(driver, match);
+                    //парс статистики игроков
+                    GetPlayerStats(driver, match);
 
                     //Заполняем данные по домашней команде
                     games.Add(new TeamGame
@@ -182,20 +183,24 @@ namespace CScores
             league.Games = games;
         }
 
-        internal (List<Player> Home, List<Player> Away) GetPlayerStats(IWebDriver driver, Match match)
+        internal (List<Player> HomePlayers, List<Player> AwayPlayers) GetPlayerStats(IWebDriver driver, Match match)
         {
-            List<string> urls = new List<string>()
+
+            string[] urls =
             {
                 $"https://www.flashscore.com.ua/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/1",
                 $"https://www.flashscore.com.ua/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/2"
             };
-
-            foreach (string url in urls)
+            List<Player>[] players =
             {
-                driver.Navigate().GoToUrl(url);
-                new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(ExpectedConditions.ElementExists(By.XPath("//div[contains(@class, 'section psc__section')]")));
+                new List<Player>(),
+                new List<Player>(),
+            };
 
-                var players = new List<Player>();
+            for (int i = 0; i < 2; i++)
+            {
+                driver.Navigate().GoToUrl(urls[i]);
+                new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(ExpectedConditions.ElementExists(By.XPath("//div[contains(@class, 'section psc__section')]")));
 
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(driver.PageSource);
@@ -221,17 +226,26 @@ namespace CScores
                         //заполняем имя и роль игрока из первого столбца
                         Player p = new Player(bRow[0].InnerText, tbHead[0]);
 
-                        for (int cell = 2; cell <= bRow.Count; cell++)
+                        for (int cell = 2; cell < bRow.Count; cell++)
                         {
-                            playerStats.Add(new StatBar(tbHead[cell], bRow[cell].InnerText));
+                            playerStats.Add(new StatBar(tbHead[cell], ToDouble(bRow[cell].InnerText)));
                         }
                         p.PlayerStats = playerStats;
-
-                        players.Add(p);
+                        players[i].Add(p);
                     }
                 }
             }
-            return (null, null);
+            return (players[0], players[1]);
+        }
+
+        internal double ToDouble(string value)
+        {
+            if (value == "-") return default;
+            if (value.ElementAt(0) == '.')
+            {
+                return Convert.ToDouble("0" + value.Replace('.', ','));
+            }
+            return Convert.ToDouble(value.Replace('.', ','));
         }
     }
 }
