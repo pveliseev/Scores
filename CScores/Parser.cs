@@ -46,16 +46,24 @@ namespace CScores
                 driver.Navigate().GoToUrl(page.Url);
 
                 //поиск кнопки ПОКАЗАТЬ БОЛЬШЕ МАТЧЕЙ и щелкаем по ней покане прогрузится весь список
-                //while (true)
-                //{
-                //    try
-                //    {
-                //        Thread.Sleep(5000);
-                //        new Actions(driver).KeyDown(Keys.End).Perform();                    
-                //        driver.FindElement(By.XPath("//a[contains(@class, 'event__more event__more--static')]")).Click();
-                //    }
-                //    catch { break; }
-                //}
+                while (true)
+                {
+                    try
+                    {
+                        Thread.Sleep(5000);
+
+                        //прокрутка до элемента (он становится по нижней границе окна) и плюс смещение вниз на случай всяких банерных сообщений снизу
+                        IWebElement iframe = driver.FindElement(By.XPath("//a[contains(@class, 'event__more event__more--static')]"));
+                        WheelInputDevice.ScrollOrigin scrollOrigin = new WheelInputDevice.ScrollOrigin
+                        {
+                            Element = iframe
+                        };
+                        new Actions(driver).ScrollFromOrigin(scrollOrigin, 0, 500).Perform();
+                        //new Actions(driver).KeyDown(Keys.End).Perform();
+                        driver.FindElement(By.XPath("//a[contains(@class, 'event__more event__more--static')]")).Click();
+                    }
+                    catch { break; }
+                }
 
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(driver.PageSource);
@@ -65,7 +73,8 @@ namespace CScores
                 foreach (var match in matchesNodes)
                 {
                     string id = match.GetAttributeValue("id", "");
-                    string url = $"https://www.flashscore.com.ua/match/{id.Substring(4)}/#/match-summary/match-statistics/0";
+                    //TODO менять пути ссылок относительно главной страницы лиги
+                    string url = $"https://www.flashscore.co.uk/match/{id.Substring(4)}/#/match-summary/match-statistics/0";
                     //string home = match.SelectSingleNode(".//div[contains(@class, 'event__participant--home')]").InnerText;
                     //string away = match.SelectSingleNode(".//div[contains(@class, 'event__participant--away')]").InnerText;
 
@@ -83,7 +92,7 @@ namespace CScores
             var games = new List<TeamGame>();
 
             int cnt = league.Matches.Count;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < cnt; i++)
             {
                 Console.WriteLine($"Парсинг матча {i + 1} из {cnt}...");
                 Match match = league.Matches[i];
@@ -188,8 +197,8 @@ namespace CScores
             league.PlayerStatBarTitles = new HashSet<string>();
             string[] urls =
             {
-                $"https://www.flashscore.com.ua/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/1",
-                $"https://www.flashscore.com.ua/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/2"
+                $"https://www.flashscore.co.uk/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/1",
+                $"https://www.flashscore.co.uk/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/2"
             };
             List<Player>[] players =
             {
@@ -247,12 +256,21 @@ namespace CScores
         }
         internal double ToDouble(string value)
         {
-            if (value == "-") return default;
-            if (value.ElementAt(0) == '.')
+            try
             {
-                return Convert.ToDouble("0" + value.Replace('.', ','));
+                if (value == "-" || value == "-.--") return default;
+                if (value.ElementAt(0) == '.')
+                {
+                    return Convert.ToDouble("0" + value.Replace('.', ','));
+                }
+                return Convert.ToDouble(value.Replace('.', ','));
             }
-            return Convert.ToDouble(value.Replace('.', ','));
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR Convert to Double: {ex.Message}");
+                return default;
+            }
+
         }
     }
 }

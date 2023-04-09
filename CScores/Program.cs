@@ -25,7 +25,7 @@ namespace CScores
             //настройка и запуск драйвера хрома
             ChromeOptions options = new ChromeOptions();
             options.PageLoadStrategy = PageLoadStrategy.Normal;
-            options.AddArguments("headless", "disable-gpu");
+            //options.AddArguments("headless", "disable-gpu");
             options.AddArgument("--disable-blink-features=AutomationControlled"); //скрывает что работает автодрайвер
             //options.AddArgument("--start-maximized");
             //options.AddArgument("--disable-logging");
@@ -37,8 +37,8 @@ namespace CScores
 
             //входные данные для парсинга
             League mlb = new League(Sport.Baseball);
-            mlb.Pages.Add(new Page("MLB 2023", @"https://www.flashscore.com.ua/baseball/usa/mlb/results/"));
-            //mlb.Pages.Add(new Page("MLB 2022", @"https://www.flashscore.com.ua/baseball/usa/mlb-2022/results/"));
+            //mlb.Pages.Add(new Page("MLB 2023", @"https://www.flashscore.com.ua/baseball/usa/mlb/results/"));
+            mlb.Pages.Add(new Page("MLB 2023", @"https://www.flashscore.co.uk/baseball/usa/mlb/results/"));
 
             try
             {
