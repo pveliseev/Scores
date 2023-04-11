@@ -92,6 +92,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FlashScoreBaseballParser.cs" />
+    <Compile Include="FlashScoreFootballParser.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="League.cs" />
     <Compile Include="Match.cs" />

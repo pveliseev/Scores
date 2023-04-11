@@ -93,5 +93,47 @@ namespace CScores
                 sw.Write(playersTable.ToString());
             }
         }
+
+        public static void Football(League league)
+        {
+            //заголовок таблицы игр
+            StringBuilder gamesTable = new StringBuilder();
+            gamesTable.Append("Liga;MatchID;Date;Time;Status;Owner;Form;Score;IsHome;Rival;Url;");
+            foreach (var item in league.GameStatBarTitles)
+            {
+                gamesTable.Append($"{item};");
+            }
+            gamesTable.AppendLine();
+
+            if (league.Games != null)
+            {
+                //данные таблицы игр
+                foreach (var game in league.Games.Cast<TeamGame>())
+                {
+                    if (game.TeamStats != null)
+                    {
+                        //формируем строки статистики
+                        StringBuilder teamStats = new StringBuilder();
+                        foreach (var item in league.GameStatBarTitles)
+                        {
+                            if (game.TeamStats["матч"].Exists(b => b.Title == item))
+                            {
+                                teamStats.Append(game.TeamStats["матч"].Find(b => b.Title == item).Value + ";");
+                            }
+                            else
+                            {
+                                teamStats.Append(";");
+                            }
+                        }
+                        gamesTable.AppendLine($"{game.LeagueTitle};{game.MatchID};{game.Date};{game.Time};{game.Status};{game.Owner.Name};{game.Form};{game.Score};{game.IsHome};{game.Rival.Name};{game.URL};{teamStats}");
+                    }
+                }
+            }
+            //запись в фаил статистики игр
+            using (StreamWriter sw = new StreamWriter("FootballGames.txt"))
+            {
+                sw.Write(gamesTable.ToString());
+            }
+        }
     }
 }

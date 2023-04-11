@@ -25,7 +25,7 @@ namespace CScores
             //настройка и запуск драйвера хрома
             ChromeOptions options = new ChromeOptions();
             options.PageLoadStrategy = PageLoadStrategy.Normal;
-            //options.AddArguments("headless", "disable-gpu");
+            options.AddArguments("headless", "disable-gpu");
             options.AddArgument("--disable-blink-features=AutomationControlled"); //скрывает что работает автодрайвер
             //options.AddArgument("--start-maximized");
             //options.AddArgument("--disable-logging");
@@ -36,19 +36,18 @@ namespace CScores
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
             //входные данные для парсинга
-            League mlb = new League(Sport.Baseball);
-            //mlb.Pages.Add(new Page("MLB 2023", @"https://www.flashscore.com.ua/baseball/usa/mlb/results/"));
-            mlb.Pages.Add(new Page("MLB 2023", @"https://www.flashscore.co.uk/baseball/usa/mlb/results/"));
+            League league = new League(Sport.Football);
+            league.Pages.Add(new Page("Премьер-лига 2022/2023", @"https://www.flashscore.com.ua/football/russia/premier-league/results/"));
 
             try
             {
-                Parser parser = new FlashScoreBaseballParser();
-                parser.GetMatches(driver, mlb);
-                parser.GetTeamGames(driver, mlb);
+                Parser parser = new FlashScoreFootballParser();
+                parser.GetMatches(driver, league);
+                parser.GetTeamGames(driver, league);
             }
             finally
             {
-                Print.Baseball(mlb);
+                Print.Football(league);
                 //конец программы
                 sw.Stop();
                 Console.WriteLine($"Время выпонения скрипта: {sw.Elapsed}");
