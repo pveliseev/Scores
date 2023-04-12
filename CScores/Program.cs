@@ -37,7 +37,7 @@ namespace CScores
 
             //входные данные для парсинга
             League league = new League(Sport.Football);
-            league.Pages.Add(new Page("Премьер-лига 2022/2023", @"https://www.flashscore.com.ua/football/russia/premier-league/results/"));
+            league.Pages.Add(new Page("Лига Эровнули 2022", @"https://www.flashscore.com.ua/football/georgia/crystalbet-erovnuli-liga-2022/results/"));
 
             try
             {

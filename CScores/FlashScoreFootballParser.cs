@@ -77,7 +77,18 @@ namespace CScores
 
                 try
                 {
-                    driver.Navigate().GoToUrl(match.Url);
+                    //попытки если проблема с подключением
+                    for (int k = 0; k < 3; k++)
+                    {
+                        try { driver.Navigate().GoToUrl(match.Url); break; }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"ERROR DRIVER: {ex.Message}");
+                            continue; 
+                        }
+                    }
+
+
                     //ожидаем подгрузки таблицы со статой
                     new WebDriverWait(driver, TimeSpan.FromSeconds(20)).Until(ExpectedConditions.ElementExists(By.ClassName("stat__row")));
                     Thread.Sleep(3000); //замедлить на случай не получения бана
