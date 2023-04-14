@@ -84,6 +84,7 @@ namespace CScores
                         catch (Exception ex)
                         {
                             Console.WriteLine($"ERROR DRIVER: {ex.Message}");
+                            Console.WriteLine($"Попытка подключения {k+2}");
                             continue; 
                         }
                     }
