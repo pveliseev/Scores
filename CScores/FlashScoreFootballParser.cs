@@ -72,8 +72,8 @@ namespace CScores
             int cnt = league.Matches.Count;
             for (int i = 0; i < cnt; i++)
             {
-                Console.WriteLine($"Парсинг матча {i + 1} из {cnt}...");
                 Match match = league.Matches[i];
+                Console.WriteLine($"Парсинг матча id {match.ID} ({i + 1} из {cnt})...");
 
                 try
                 {

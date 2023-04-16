@@ -37,9 +37,11 @@ namespace CScores
 
             //входные данные для парсинга
             League league = new League(Sport.Football);
-            league.Pages.Add(new Page("Лига Чемпионов 2021/2022", @"https://www.flashscore.com.ua/football/europe/champions-league-2021-2022/results/"));
-            league.Pages.Add(new Page("Лига Чемпионов 2020/2021", @"https://www.flashscore.com.ua/football/europe/champions-league-2020-2021/results/"));
-            league.Pages.Add(new Page("Лига Чемпионов 2019/2020", @"https://www.flashscore.com.ua/football/europe/champions-league-2019-2020/results/"));
+            league.Pages.Add(new Page("Серия А 2021/2022", @"https://www.flashscore.com.ua/football/italy/serie-a-2021-2022/results/"));
+            league.Pages.Add(new Page("Серия А 2020/2021", @"https://www.flashscore.com.ua/football/italy/serie-a-2020-2021/results/"));
+            league.Pages.Add(new Page("Серия А 2019/2020", @"https://www.flashscore.com.ua/football/italy/serie-a-2019-2020/results/"));
+            league.Pages.Add(new Page("Серия А 2018/2019", @"https://www.flashscore.com.ua/football/italy/serie-a-2018-2019/results/"));
+            league.Pages.Add(new Page("Серия А 2017/2018", @"https://www.flashscore.com.ua/football/italy/serie-a-2017-2018/results/"));
 
             try
             {
