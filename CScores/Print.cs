@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace CScores
 {
@@ -93,7 +94,6 @@ namespace CScores
                 sw.Write(playersTable.ToString());
             }
         }
-
         public static void Football(League league)
         {
             //заголовок таблицы игр
@@ -131,6 +131,33 @@ namespace CScores
             }
             //запись в фаил статистики игр
             using (StreamWriter sw = new StreamWriter("FootballGames.txt"))
+            {
+                sw.Write(gamesTable.ToString());
+            }
+        }
+        public static void TableTennis(League league)
+        {
+            //заголовок таблицы игр
+            StringBuilder gamesTable = new StringBuilder();
+            gamesTable.AppendLine("Liga;Date;Time;Status;OwnerName;OwnerRating;Score;Form;RivalName;RivalRating;Url;1set;2set;3set;4set;5set");
+
+            if (league.Games != null)
+            {
+                foreach (var game in league.Games.Cast<IndividualGame>())
+                {
+                    //формируем строки статистики
+                    StringBuilder playerStats = new StringBuilder();
+                    foreach (var bar in game.Owner.PlayerStats)
+                    {
+                        playerStats.Append(bar.Value + ";");
+                    }
+                    //тело таблицы
+                    gamesTable.AppendLine($"{game.LeagueTitle};{game.Date};{game.Time};{game.Status};{game.Owner.Name + "_" + game.Owner.ID};{game.Owner.Rating};{game.Score};{game.Form};{game.Rival.Name + "_" + game.Rival.ID};{game.Rival.Rating};{game.URL};{playerStats}");
+                }
+            }
+
+            //запись в фаил статистики игр
+            using (StreamWriter sw = new StreamWriter("TableTennis.txt"))
             {
                 sw.Write(gamesTable.ToString());
             }
