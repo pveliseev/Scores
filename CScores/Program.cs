@@ -36,12 +36,16 @@ namespace CScores
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
             //входные данные для парсинга
-            League league = new League(Sport.Football);
-            league.Pages.Add(new Page("Олимп-ФНЛ 2021/2022", @"https://www.flashscore.com.ua/football/russia/fnl-2021-2022/results/"));
-            league.Pages.Add(new Page("Олимп-ФНЛ 2020/2021", @"https://www.flashscore.com.ua/football/russia/fnl-2020-2021/results/"));
-            league.Pages.Add(new Page("ФНЛ 2019/2020", @"https://www.flashscore.com.ua/football/russia/fnl-2019-2020/results/"));
-            league.Pages.Add(new Page("ФНЛ 2018/2019", @"https://www.flashscore.com.ua/football/russia/fnl-2018-2019/results/"));
-            league.Pages.Add(new Page("FNL 2017/2018", @"https://www.flashscore.com.ua/football/russia/fnl-2017-2018/results/"));
+            League league = new League(Sport.Baseball);
+            //league.Pages.Add(new Page("Суперлига 2022", @"https://www.flashscore.com.ua/football/china/super-league-2022/results/"));
+            //league.Pages.Add(new Page("Суперлига 2021", @"https://www.flashscore.com.ua/football/china/super-league-2021/results/"));
+            //league.Pages.Add(new Page("Суперлига 2020", @"https://www.flashscore.com.ua/football/china/super-league-2020/results/"));
+            //league.Pages.Add(new Page("Суперлига 2019", @"https://www.flashscore.com.ua/football/china/super-league-2019/results/"));
+            //league.Pages.Add(new Page("Суперлига 2018", @"https://www.flashscore.com.ua/football/china/super-league-2018/results/"));
+
+            //league.Pages.Add(new Page("МЛБ 2023", @"https://www.flashscore.com.ua/baseball/usa/mlb/results/"));
+
+            league.Pages.Add(new Page("Премьер-лига 2022/2023", @"https://www.flashscore.com.ua/football/russia/premier-league-2022-2023/results/"));
 
             try
             {

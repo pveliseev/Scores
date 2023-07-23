@@ -50,7 +50,7 @@ namespace CScores
                 {
                     string id = match.GetAttributeValue("id", "");
                     //TODO менять пути ссылок относительно главной страницы лиги
-                    string url = $"https://www.flashscore.co.uk/match/{id.Substring(4)}/#/match-summary/match-statistics/0";
+                    string url = $"https://www.flashscore.com.ua/match/{id.Substring(4)}/#/match-summary/match-statistics/0";
                     //string home = match.SelectSingleNode(".//div[contains(@class, 'event__participant--home')]").InnerText;
                     //string away = match.SelectSingleNode(".//div[contains(@class, 'event__participant--away')]").InnerText;
 
@@ -173,8 +173,8 @@ namespace CScores
             league.PlayerStatBarTitles = new HashSet<string>();
             string[] urls =
             {
-                $"https://www.flashscore.co.uk/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/1",
-                $"https://www.flashscore.co.uk/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/2"
+                $"https://www.flashscore.com.ua/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/1",
+                $"https://www.flashscore.com.ua/match/{match.ID.Substring(4)}/#/match-summary/player-statistics/2"
             };
             List<Player>[] players =
             {
