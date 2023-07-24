@@ -53,7 +53,7 @@ namespace CScores
                 //parser.GetTeamGames(driver, league);
 
                 Parser parser = new SportLigaTableTennis();
-                ((SportLigaTableTennis)parser).GetPages(driver,league, new DateTime(2023,7,21), new DateTime(2023, 7, 21));
+                ((SportLigaTableTennis)parser).GetPages(driver,league, new DateTime(2023,7,10), new DateTime(2023, 7, 13));
                 ((SportLigaTableTennis)parser).GetIndividualGame(driver, league);
             }
             finally

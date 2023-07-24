@@ -67,7 +67,7 @@ namespace CScores
                         continue;
                     }
                     //если в строке статистика игры, то парсим её
-                    if (game.SelectSingleNode(".//td[@class='score']") != null)
+                    if (game.SelectSingleNode(".//td[@class='score']/table") != null)
                     {
                         //данные игры
                         string date = page.Title.Split(';')[1];
