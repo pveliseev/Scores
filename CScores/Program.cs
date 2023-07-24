@@ -24,7 +24,8 @@ namespace CScores
 
             //настройка и запуск драйвера хрома
             ChromeOptions options = new ChromeOptions();
-            options.PageLoadStrategy = PageLoadStrategy.Normal;
+            //стратегия загрузки страницы
+            options.PageLoadStrategy = PageLoadStrategy.Eager;
             //options.AddArguments("headless", "disable-gpu");
             options.AddArgument("--disable-blink-features=AutomationControlled"); //скрывает что работает автодрайвер
             options.AddArgument("--start-maximized");
@@ -52,7 +53,7 @@ namespace CScores
                 //parser.GetTeamGames(driver, league);
 
                 Parser parser = new SportLigaTableTennis();
-                ((SportLigaTableTennis)parser).GetPages(driver,league, new DateTime(2023,7,20), new DateTime(2023, 7, 20));
+                ((SportLigaTableTennis)parser).GetPages(driver,league, new DateTime(2023,7,21), new DateTime(2023, 7, 21));
                 ((SportLigaTableTennis)parser).GetIndividualGame(driver, league);
             }
             finally

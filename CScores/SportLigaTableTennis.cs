@@ -46,9 +46,10 @@ namespace CScores
             var games = new List<IndividualGame>();
             league.PlayerStatBarTitles = new HashSet<string>() { "1set", "2set", "3set", "4set", "5set" };
 
-            //foreach (var page in league.Pages)
+            foreach (var page in league.Pages)
             {
-                Page page = league.Pages[0]; // для теста одну таблицу
+                Thread.Sleep(3000);
+                //Page page = league.Pages[0]; // для теста одну таблицу
                 driver.Navigate().GoToUrl(page.Url);
 
                 HtmlDocument doc = new HtmlDocument();
