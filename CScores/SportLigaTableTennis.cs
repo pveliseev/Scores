@@ -27,7 +27,9 @@ namespace CScores
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(driver.PageSource);
                 HtmlNodeCollection pagesNodes = doc.DocumentNode.SelectNodes("//table[@class='table']//td[@class='tournament-name']//a");
-                foreach (var page in pagesNodes)
+
+                //перебор списка снизу вверх для сортировки времени начала по возрастанию
+                foreach (var page in pagesNodes.Reverse())
                 {
                     //TODO костыль: к заголовку прикрепляем дату что бы при парсинге игр её использовать
                     string title = page.InnerText + ";" + tmp.ToString("d");
